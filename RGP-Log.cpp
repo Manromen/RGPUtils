@@ -2,12 +2,11 @@
  RGP-Log.cpp
 
  Created by Ralph-Gordon Paul on 08.07.13.
- Copyright (c) 2013 Ralph-Gordon Paul. All rights reserved.
 
  -------------------------------------------------------------------------------
  The MIT License (MIT)
  
- Copyright (c) 2014 Ralph-Gordon Paul
+ Copyright (c) 2013 Ralph-Gordon Paul. All rights reserved.
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
