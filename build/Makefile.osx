@@ -4,6 +4,7 @@ CFLAGS=-W -Wall -Wextra -pedantic -x c -std=c11
 CXXFLAGS=-W -Wall -Wextra -pedantic -std=c++11 -stdlib=libc++
 LIBS=
 OBJECTS=
+SOURCE_PATH=../source/
 EXECUTABLE_NAME=test
 
 # architecture
@@ -25,11 +26,11 @@ OBJECTS += logtest.o
 all: linker
 
 # classes
-rgplog.o: RGP-Log.cpp RGP-Log.h
-	$(CXX) $(CXXFLAGS) $(ARCH) -c -o rgplog.o RGP-Log.cpp $(LIBS)
+rgplog.o: $(SOURCE_PATH)RGP-Log.cpp $(SOURCE_PATH)RGP-Log.h
+	$(CXX) $(CXXFLAGS) $(ARCH) -c -o rgplog.o $(SOURCE_PATH)RGP-Log.cpp $(LIBS)
 
-logtest.o: test.cpp
-	$(CXX) $(CXXFLAGS) $(ARCH) -c -o logtest.o test.cpp $(LIBS)
+logtest.o: $(SOURCE_PATH)test.cpp
+	$(CXX) $(CXXFLAGS) $(ARCH) -c -o logtest.o $(SOURCE_PATH)test.cpp $(LIBS)
 
 # linker
 linker: $(OBJECTS)
