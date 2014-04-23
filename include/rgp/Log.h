@@ -1,5 +1,5 @@
 /*
- RGP-Log.h
+ Log.h
 
  Created by Ralph-Gordon Paul on 08.07.13.
 

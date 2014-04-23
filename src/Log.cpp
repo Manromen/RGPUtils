@@ -1,5 +1,5 @@
 /*
- RGP-Log.cpp
+ Log.cpp
 
  Created by Ralph-Gordon Paul on 08.07.13.
 
@@ -29,7 +29,8 @@
 */
 
 
-#include "RGP-Log.h"
+#include <rgp/Log.h>
+
 #include <iostream> // cout / cerr
 #include <fstream>  // file writing
 #include <ctime>    // adding date / time to log file

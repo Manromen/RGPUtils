@@ -15,17 +15,17 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # create library
 add_library(rgp-log STATIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/RGP-Log.cpp)
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp)
 
 # create test executable
-add_executable(test
-               ${CMAKE_CURRENT_SOURCE_DIR}/test/test.cpp)
+add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
 
 # link library to test executable
-target_link_libraries(test rgp-log)
+target_link_libraries(example rgp-log)
 
 # installation 
-INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/RGP-Log.h
+INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
   DESTINATION include)
+
 INSTALL(TARGETS rgp-log
   ARCHIVE DESTINATION lib)

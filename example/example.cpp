@@ -1,5 +1,5 @@
 /*
- test.cpp
+ example.cpp
 
  Created by Ralph-Gordon Paul on 24.07.13.
  
@@ -30,13 +30,13 @@
 
 #include <iostream>
 
-#include <RGP-Log.h>
+#include <rgp/Log.h>
 
 using namespace rgp;
 
 int main(int argc, const char **argv)
 {
-    Log::sharedLog()->print("Todo: implement test");
+    Log::sharedLog()->print("Todo: add more examples");
     
     return EXIT_SUCCESS;
 }
