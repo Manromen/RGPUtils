@@ -1,7 +1,19 @@
+
 RGP-Log
 =======
-
 A Singleton Log Class to use for coordinated multithreaded logging (output or logfile)
+
+Installation
+=======
+There is a provided CMake configure file.  
+On Unix you can use the following example commands:  
+```
+mkdir build
+cd build
+cmake -i ..
+make
+sudo make install
+```
 
 LICENSE
 =======
