@@ -30,7 +30,7 @@
 
 #include <iostream>
 
-#include "RGP-Log.h"
+#include <RGP-Log.h>
 
 using namespace rgp;
 
