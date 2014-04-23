@@ -24,3 +24,8 @@ add_executable(test
 # link library to test executable
 target_link_libraries(test rgp-log)
 
+# installation 
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/RGP-Log.h
+  DESTINATION include)
+INSTALL(TARGETS rgp-log
+  ARCHIVE DESTINATION lib)
