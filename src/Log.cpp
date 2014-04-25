@@ -63,7 +63,7 @@ void Log::setLoglevel(const Loglevel level)
 // verbose level 1 print
 void Log::printv(const std::string text)
 {
-    if (_logLevel >= 1) {
+    if (_logLevel >= LoglevelVerbose) {
         print(text);
     }
 }
@@ -71,43 +71,46 @@ void Log::printv(const std::string text)
 // normal print
 void Log::print(const std::string text)
 {
-    _cout_mutex.lock();
-    
-    // use log file if possible
-    if (_hasLogfile) {
+    if (_logLevel >= LoglevelNormal) {
         
-        // open log file
-        std::ofstream file;
-        file.open(_logFilePath, std::ios::app);
+        _cout_mutex.lock();
         
-        // write output to file
-        if (file.is_open()) {
+        // use log file if possible
+        if (_hasLogfile) {
             
-            // add time to file
-            time_t timestamp = time(NULL); // get time now
-            tm *current_time = localtime( &timestamp );
-            file
-            << (current_time->tm_year + 1900) << '-'
-            << (current_time->tm_mon + 1) << '-'
-            <<  current_time->tm_mday << ' '
-            <<  current_time->tm_hour << ':'
-            <<  current_time->tm_min << ':'
-            <<  current_time->tm_sec << ' ';
+            // open log file
+            std::ofstream file;
+            file.open(_logFilePath, std::ios::app);
             
-            // append text
-            file << text << std::endl;
+            // write output to file
+            if (file.is_open()) {
+                
+                // add time to file
+                time_t timestamp = time(NULL); // get time now
+                tm *current_time = localtime( &timestamp );
+                file
+                << (current_time->tm_year + 1900) << '-'
+                << (current_time->tm_mon + 1) << '-'
+                <<  current_time->tm_mday << ' '
+                <<  current_time->tm_hour << ':'
+                <<  current_time->tm_min << ':'
+                <<  current_time->tm_sec << ' ';
+                
+                // append text
+                file << text << std::endl;
+            }
+            
+            // close log file
+            file.close();
+            
+        } else {
+            
+            // output to stdout
+            std::cout << text << std::endl << std::flush;
         }
         
-        // close log file
-        file.close();
-        
-    } else {
-        
-        // output to stdout
-        std::cout << text << std::endl << std::flush;
+        _cout_mutex.unlock();
     }
-    
-    _cout_mutex.unlock();
 }
 
 // outputs text and reads line from stdin
