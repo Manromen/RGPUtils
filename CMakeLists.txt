@@ -5,9 +5,12 @@ project (RGP-Log)
 set (RGP_Log_VERSION_MAJOR 0)
 set (RGP_Log_VERSION_MINOR 1)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3")
+
 # enable c++11
 if(UNIX)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -stdlib=libc++")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
 endif()
 # MSVC does not require any special flags for c++11 support
 
