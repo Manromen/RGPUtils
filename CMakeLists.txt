@@ -1,10 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 project (RGP-Log)
 
-# The version number: 0.1
-set (RGP_Log_VERSION_MAJOR 0)
-set (RGP_Log_VERSION_MINOR 1)
-
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3")
 
@@ -26,7 +22,7 @@ endif()
 
 # enable c++11
 if(UNIX)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
 endif()
 # MSVC does not require any special flags for c++11 support
 
@@ -43,8 +39,8 @@ add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
 target_link_libraries(example rgp-log)
 
 # installation 
-INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
   DESTINATION include)
 
-INSTALL(TARGETS rgp-log
+install(TARGETS rgp-log
   ARCHIVE DESTINATION lib)
