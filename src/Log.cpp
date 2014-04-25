@@ -28,12 +28,11 @@
  -------------------------------------------------------------------------------
 */
 
-
 #include <rgp/Log.h>
 
-#include <iostream> // cout / cerr
+#include <iostream> // cout / cerr / cin ...
 #include <fstream>  // file writing
-#include <ctime>    // adding date / time to log file
+#include <ctime>    // adding date to log file
 #include <cstring>  // strerror
 
 using namespace rgp;
@@ -51,10 +50,20 @@ Log *Log::sharedLog() {
     return _sharedInstance;
 }
 
+Loglevel Log::loglevel() const
+{
+    return _logLevel;
+}
+
+void Log::setLoglevel(const Loglevel level)
+{
+    _logLevel = level;
+}
+
 // verbose level 1 print
 void Log::printv(const std::string text)
 {
-    if (logLevel >= 1) {
+    if (_logLevel >= 1) {
         print(text);
     }
 }
@@ -102,7 +111,7 @@ void Log::print(const std::string text)
 }
 
 // outputs text and reads line from stdin
-std::string Log::getline( const std::string text )
+std::string Log::getline(const std::string text)
 {
     char line_c[1024];
     
@@ -117,7 +126,7 @@ std::string Log::getline( const std::string text )
 }
 
 // outputs text and reads one character from stdin
-char Log::getc( const std::string text )
+char Log::getc(const std::string text)
 {
     char c = ' ';
     
@@ -174,7 +183,7 @@ void Log::error(const std::string text)
 }
 
 // error print with error number (errno)
-void Log::errorWithErrno(const std::string text, int err)
+void Log::errorWithErrno(const std::string text, const int err)
 {
     // create error string with text + errno
     std::string error_string { text };
@@ -186,7 +195,7 @@ void Log::errorWithErrno(const std::string text, int err)
 }
 
 // using log file for print
-void Log::useLogfile( const std::string filePath )
+void Log::useLogfile(const std::string filePath)
 {
     _logFilePath = filePath;
     
@@ -200,7 +209,7 @@ void Log::useLogfile( const std::string filePath )
 }
 
 // using error file
-void Log::useErrorfile( const std::string filePath )
+void Log::useErrorfile(const std::string filePath)
 {
     _errorFilePath = filePath;
     

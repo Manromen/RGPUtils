@@ -29,6 +29,7 @@
 */
 
 #include <iostream>
+#include <sstream>
 
 #include <rgp/Log.h>
 
@@ -36,7 +37,32 @@ using namespace rgp;
 
 int main(int argc, const char **argv)
 {
-    Log::sharedLog()->print("Todo: add more examples");
+    // will logout (if we are in debug mode) that we are in main function
+    RGPLOGMETHODNAME();
+    
+    Log::sharedLog()->print("normal logout");
+    
+    RGPLOG("This will only be logged if compiled in debug mode");
+    
+    // output using stringstream
+    std::stringstream logout;
+    logout << "this ";
+    logout << "is ";
+    logout << "another method " << 42 << std::endl;
+    Log::sharedLog()->print(logout.str());
+    
+    Log::sharedLog()->printv("logout on verbose mode ... not set yet => this" \
+                             "won't be printed");
+    
+    Log::sharedLog()->setLoglevel(LoglevelVerbose);
+    
+    RGPLOGV("This will only be logged if compiled in debug mode and logging is"\
+            "on verbose");
+    
+    // getline will get the input from the user
+    std::string yourName = Log::sharedLog()->getline("What is your name?: ");
+    
+    Log::sharedLog()->print(std::string("So, Your name is: ") += yourName);
     
     return EXIT_SUCCESS;
 }
