@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3")
 
 message(STATUS "Build Type is ${CMAKE_BUILD_TYPE}")
 
+# check compiler for c++11 capability
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") # Clang
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.3")
     message(WARNING "Your compiler version may not support all used C++11 features!")
@@ -32,7 +33,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(rgp-log STATIC
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp)
 
-# create test executable
+# create example executable
 add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
 
 # link library to test executable
