@@ -40,7 +40,7 @@ using namespace rgp;
 // init instance to nullptr
 Log *Log::_sharedInstance = nullptr;
 
-Log *Log::sharedLog() {
+Log *Log::sharedLog () {
     
     // if first used -> alloc instance
     if (_sharedInstance == nullptr) {
@@ -50,18 +50,18 @@ Log *Log::sharedLog() {
     return _sharedInstance;
 }
 
-Loglevel Log::loglevel() const
+Loglevel Log::loglevel () const
 {
     return _logLevel;
 }
 
-void Log::setLoglevel(const Loglevel level)
+void Log::setLoglevel (const Loglevel level)
 {
     _logLevel = level;
 }
 
 // verbose level 1 print
-void Log::printv(const std::string text)
+void Log::printv (const std::string text)
 {
     if (_logLevel >= LoglevelVerbose) {
         print(text);
@@ -69,7 +69,7 @@ void Log::printv(const std::string text)
 }
 
 // normal print
-void Log::print(const std::string text)
+void Log::print (const std::string text)
 {
     if (_logLevel >= LoglevelNormal) {
         
@@ -114,7 +114,7 @@ void Log::print(const std::string text)
 }
 
 // outputs text and reads line from stdin
-std::string Log::getline(const std::string text)
+std::string Log::getline (const std::string text)
 {
     char line_c[1024];
     
@@ -129,7 +129,7 @@ std::string Log::getline(const std::string text)
 }
 
 // outputs text and reads one character from stdin
-char Log::getc(const std::string text)
+char Log::getc (const std::string text)
 {
     char c = ' ';
     
@@ -144,7 +144,7 @@ char Log::getc(const std::string text)
 }
 
 // error print
-void Log::error(const std::string text)
+void Log::error (const std::string text)
 {
     _cerr_mutex.lock();
     
@@ -186,7 +186,7 @@ void Log::error(const std::string text)
 }
 
 // error print with error number (errno)
-void Log::errorWithErrno(const std::string text, const int err)
+void Log::errorWithErrno (const std::string text, const int err)
 {
     // create error string with text + errno
     std::string error_string { text };
@@ -198,7 +198,7 @@ void Log::errorWithErrno(const std::string text, const int err)
 }
 
 // using log file for print
-void Log::useLogfile(const std::string filePath)
+void Log::useLogfile (const std::string filePath)
 {
     _logFilePath = filePath;
     
@@ -212,7 +212,7 @@ void Log::useLogfile(const std::string filePath)
 }
 
 // using error file
-void Log::useErrorfile(const std::string filePath)
+void Log::useErrorfile (const std::string filePath)
 {
     _errorFilePath = filePath;
     

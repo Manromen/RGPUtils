@@ -97,14 +97,14 @@ namespace rgp {
     public:
         
         /** Returns the shared log object. */
-        static Log *sharedLog();
+        static Log *sharedLog ();
         
         /**
          @brief The current LogLevel (Default: LoglevelNormal).
          @return The current LogLevel.
          @sa setLoglevel()
          */
-        Loglevel loglevel() const;
+        Loglevel loglevel () const;
         
         /**
          @brief Sets a new LogLevel.
@@ -114,7 +114,7 @@ namespace rgp {
          @param level The new loglevel.
          @sa loglevel(), print() and printv()
          */
-        void setLoglevel(const Loglevel level);
+        void setLoglevel (const Loglevel level);
         
         /**
          @brief This will logout the given text.
@@ -124,7 +124,7 @@ namespace rgp {
          @param text The text that should be logged out.
          @sa loglevel() and useLogfile()
          */
-        void print(const std::string text);
+        void print (const std::string text);
         
         /**
          @brief This will logout the given text.
@@ -134,7 +134,7 @@ namespace rgp {
          @param text The text that should be logged out.
          @sa loglevel() and useLogfile()
          */
-        void printv(const std::string text);
+        void printv (const std::string text);
         
         /**
          @brief Read a line from std::cin.
@@ -146,7 +146,7 @@ namespace rgp {
          @return The input from std::cin. The input will be a whole line.
          @sa getc()
          */
-        std::string getline(const std::string text);
+        std::string getline (const std::string text);
         
         /**
          @brief Read a character from std::cin.
@@ -158,7 +158,7 @@ namespace rgp {
          @return The input from std::cin. The input just be a character.
          @sa getc()
          */
-        char getc(const std::string text);
+        char getc (const std::string text);
         
         /**
          @brief This will logout the given text.
@@ -167,7 +167,7 @@ namespace rgp {
          @param text The text that should be logged out.
          @sa errorWithErrno() and useErrorfile()
          */
-        void error(const std::string text);
+        void error (const std::string text);
         
         /**
          @brief This will logout the given text with the given errno code.
@@ -179,7 +179,7 @@ namespace rgp {
          error text.
          @sa error() and useErrorfile()
          */
-        void errorWithErrno(const std::string text, const int err);
+        void errorWithErrno (const std::string text, const int err);
         
         /**
          @brief Set logfile for output.
@@ -189,7 +189,7 @@ namespace rgp {
          Preferably the full path.
          @sa useErrorfile()
          */
-        void useLogfile(const std::string filePath);
+        void useLogfile (const std::string filePath);
         
         /**
          @brief Set logfile for error output.
@@ -199,15 +199,15 @@ namespace rgp {
          Preferably the full path.
          @sa useLogfile()
          */
-        void useErrorfile(const std::string filePath);
+        void useErrorfile (const std::string filePath);
         
     private:
         
         // make constructor private (we are a singleton class)
-        Log() {}
+        Log () {}
         
         // disallow copy constructor
-        Log(const Log &log) = delete;
+        Log (const Log &log) = delete;
         Log &operator = (Log const &) = delete;
         
         // singleton instance
@@ -240,11 +240,11 @@ namespace rgp {
     class LogException : std::exception {
         
     public:
-        LogException() {};
-        LogException(std::string exception) : _exceptionString(exception) {};
+        LogException () {};
+        LogException (std::string exception) : _exceptionString(exception) {};
         
-        std::string what() { return _exceptionString; };
-        virtual const char *what() const throw() {
+        std::string what () { return _exceptionString; };
+        virtual const char *what () const throw() {
             return _exceptionString.c_str();
         };
         

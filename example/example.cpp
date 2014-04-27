@@ -35,7 +35,7 @@
 
 using namespace rgp;
 
-int main(int argc, const char **argv)
+int main (int argc, const char **argv)
 {
     // will logout (if we are in debug mode) that we are in main function
     RGPLOGMETHODNAME();
