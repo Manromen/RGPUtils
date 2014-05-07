@@ -30,7 +30,7 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # create library
-add_library(rgp-log STATIC
+add_library(rgp-log SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp)
 
 # create example executable
@@ -44,4 +44,4 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
   DESTINATION include)
 
 install(TARGETS rgp-log
-  ARCHIVE DESTINATION lib)
+  LIBRARY DESTINATION lib)
