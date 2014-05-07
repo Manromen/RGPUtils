@@ -39,6 +39,11 @@ add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
 # link library to test executable
 target_link_libraries(example rgp-log)
 
+# set version info
+set_target_properties(rgp-log PROPERTIES
+					  VERSION 1.1
+					  SOVERSION 0)
+
 # installation 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
   DESTINATION include)
