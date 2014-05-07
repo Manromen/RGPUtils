@@ -49,10 +49,14 @@ int main (int argc, const char **argv)
     Log::sharedLog()->printv("logout on verbose mode ... not set yet => this" \
                              "won't be printed");
     
+    Log::sharedLog()->print("This text is red!", AnsiSgrFgColorRed);
+    Log::sharedLog()->print("This text is black on white background!",
+                            AnsiSgrFgColorBlack, AnsiSgrBgColorWhite);
+    
     Log::sharedLog()->setLoglevel(LoglevelVerbose);
     
-    RGPLOGV("This will only be logged if compiled in debug mode and logging is"\
-            "on verbose");
+    RGPLOGV("This will only be logged if compiled in debug mode and logging " \
+            "is on verbose");
     
     // getline will get the input from the user
     std::string yourName = Log::sharedLog()->getline("What is your name?: ");

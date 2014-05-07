@@ -26,6 +26,7 @@
 #include <rgp/Log.h>
 
 #include <iostream> // cout / cerr / cin ...
+#include <sstream>  // stringstream
 #include <fstream>  // file writing
 #include <ctime>    // adding date to log file
 #include <cstring>  // strerror
@@ -56,15 +57,17 @@ void Log::setLoglevel (const Loglevel level)
 }
 
 // verbose level 1 print
-void Log::printv (const std::string text)
+void Log::printv (const std::string text, const AnsiSgrFgColor fgcolor,
+                  const AnsiSgrBgColor bgcolor)
 {
     if (_logLevel >= LoglevelVerbose) {
-        print(text);
+        print(text, fgcolor, bgcolor);
     }
 }
 
 // normal print
-void Log::print (const std::string text)
+void Log::print (const std::string text, const AnsiSgrFgColor fgcolor,
+                 const AnsiSgrBgColor bgcolor)
 {
     if (_logLevel >= LoglevelNormal) {
         
@@ -100,8 +103,14 @@ void Log::print (const std::string text)
             
         } else {
             
+            // TODO: check if terminal supports ansi colors
+            std::cout << createSelectGraphicRenditionCode(fgcolor, bgcolor);
+            
             // output to stdout
             std::cout << text << std::endl << std::flush;
+            
+            // reset colors to default
+            std::cout << resetSelectGraphicRenditionCode();
         }
         
         _cout_mutex.unlock();
@@ -218,4 +227,23 @@ void Log::useErrorfile (const std::string filePath)
         _hasErrorfile = true;
     }
     file.close();
+}
+
+// creates ANSI SGR Code for given foreground and background colors
+std::string Log::createSelectGraphicRenditionCode(const AnsiSgrFgColor fgcolor,
+                                                  const AnsiSgrBgColor bgcolor)
+{
+    std::stringstream sgr;
+    if (fgcolor != AnsiSgrFgColorDefault || bgcolor != AnsiSgrBgColorDefault) {
+        sgr << "\033[" << fgcolor << ";" << bgcolor << "m";
+    }
+    return sgr.str();
+}
+
+// creates ANSI SGR Reset Code
+std::string Log::resetSelectGraphicRenditionCode()
+{
+    std::stringstream sgr;
+    sgr << "\033[0m";
+    return sgr.str();
 }

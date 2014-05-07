@@ -83,6 +83,52 @@ namespace rgp {
         LoglevelVerbose
     } Loglevel;
     
+    /** Describes a ANSI Foregorund Color used for
+     SGR (Select Graphic Rendition) parameters */
+    typedef enum : uint8_t {
+        /** terminal default -> will use terminal setting */
+        AnsiSgrFgColorDefault = 39,
+        AnsiSgrFgColorBlack = 30,
+        AnsiSgrFgColorRed,
+        AnsiSgrFgColorGreen,
+        AnsiSgrFgColorYellow,
+        AnsiSgrFgColorBlue,
+        AnsiSgrFgColorMagenta,
+        AnsiSgrFgColorCyan,
+        AnsiSgrFgColorGray,
+        AnsiSgrFgColorDarkGray = 90,
+        AnsiSgrFgColorLightRed,
+        AnsiSgrFgColorLightGreen,
+        AnsiSgrFgColorLightYellow,
+        AnsiSgrFgColorLightBlue,
+        AnsiSgrFgColorLightMagenta,
+        AnsiSgrFgColorLightCyan,
+        AnsiSgrFgColorWhite
+    } AnsiSgrFgColor;
+    
+    /** Describes a ANSI Background Color used for
+     SGR (Select Graphic Rendition) parameters */
+    typedef enum : uint8_t {
+        /** terminal default -> will use terminal setting */
+        AnsiSgrBgColorDefault = 49,
+        AnsiSgrBgColorBlack = 40,
+        AnsiSgrBgColorRed,
+        AnsiSgrBgColorGreen,
+        AnsiSgrBgColorYellow,
+        AnsiSgrBgColorBlue,
+        AnsiSgrBgColorMagenta,
+        AnsiSgrBgColorCyan,
+        AnsiSgrBgColorGray,
+        AnsiSgrBgColorDarkGray = 100,
+        AnsiSgrBgColorLightRed,
+        AnsiSgrBgColorLightGreen,
+        AnsiSgrBgColorLightYellow,
+        AnsiSgrBgColorLightBlue,
+        AnsiSgrBgColorLightMagenta,
+        AnsiSgrBgColorLightCyan,
+        AnsiSgrBgColorWhite
+    } AnsiSgrBgColor;
+    
     /**
      @brief A Singleton Log class for thread-safe logging
      @details This class uses std::cout / std::cerr for log and error outputs.
@@ -117,9 +163,15 @@ namespace rgp {
          loglevel (LoglevelNormal or higher) is set. If there is a logfile
          specified, the output will be written to that file instead.
          @param text The text that should be logged out.
+         @param fgcolor The foreground color of the text (only for supported
+         terminals). This parameter is optional.
+         @param bgcolor The background color of the text (only for supported
+         terminals). This parameter is optional.
          @sa loglevel() and useLogfile()
          */
-        void print (const std::string text);
+        void print (const std::string text,
+                    const AnsiSgrFgColor fgcolor=AnsiSgrFgColorDefault,
+                    const AnsiSgrBgColor bgcolor=AnsiSgrBgColorDefault);
         
         /**
          @brief This will logout the given text.
@@ -127,9 +179,15 @@ namespace rgp {
          loglevel (LoglevelVerbose or higher) is set. If there is a logfile
          specified, the output will be written to that file instead.
          @param text The text that should be logged out.
+         @param fgcolor The foreground color of the text (only for supported
+         terminals). This parameter is optional.
+         @param bgcolor The background color of the text (only for supported
+         terminals). This parameter is optional.
          @sa loglevel() and useLogfile()
          */
-        void printv (const std::string text);
+        void printv (const std::string text,
+                     const AnsiSgrFgColor fgcolor = AnsiSgrFgColorDefault,
+                     const AnsiSgrBgColor bgcolor = AnsiSgrBgColorDefault);
         
         /**
          @brief Read a line from std::cin.
@@ -229,6 +287,12 @@ namespace rgp {
         
         // stores the path to the given error logfile
         std::string _errorFilePath { "" };
+        
+        // creates ANSI SGR Code for given foreground and background colors
+        std::string createSelectGraphicRenditionCode(const AnsiSgrFgColor fgcolor,
+                                                     const AnsiSgrBgColor bgcolor);
+        // creates ANSI SGR Reset Code
+        std::string resetSelectGraphicRenditionCode();
     };
     
     /** Exception class for Log */
