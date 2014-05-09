@@ -1,7 +1,7 @@
 /*
  Log.h
  
- Created by Ralph-Gordon Paul on 08.07.13.
+ Created by Ralph-Gordon Paul on 08. July 2013.
  
  A Singleton Log Class to use for coordinated multithreaded logging
  (output or logfile)
@@ -32,6 +32,17 @@
 #include <mutex>
 #include <atomic>
 #include <string>
+
+// on windows we need the exports for creating the dll
+#if defined(_WIN32)
+  #if defined(RGPLOG_EXPORTS)
+    #define RGPLOG_EXPORT __declspec(dllexport)
+  #else
+    #define RGPLOG_EXPORT __declspec(dllimport)
+  #endif /* defined (RGPLOG_EXPORTS) */
+#else /* defined (_WIN32) */
+ #define RGPLOG_EXPORT
+#endif
 
 // hide debug information (and string data) for better security
 // (less information for an attacker)
@@ -133,7 +144,7 @@ namespace rgp {
      @brief A Singleton Log class for thread-safe logging
      @details This class uses std::cout / std::cerr for log and error outputs.
      */
-    class Log {
+    class RGPLOG_EXPORT Log {
         
     public:
         
@@ -296,7 +307,7 @@ namespace rgp {
     };
     
     /** Exception class for Log */
-    class LogException : std::exception {
+    class RGPLOG_EXPORT LogException : std::exception {
         
     public:
         LogException () {};

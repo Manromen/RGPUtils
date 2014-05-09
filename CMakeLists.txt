@@ -1,11 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 project (RGP-Log)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -DDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3")
-
-message(STATUS "Build Type is ${CMAKE_BUILD_TYPE}")
-
 # check compiler for c++11 capability
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") # Clang
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.3")
@@ -19,19 +14,34 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel") # Intel
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14.0")
     message(WARNING "Your compiler version may not support all used C++11 features!")
   endif()
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # MS Visual Compiler
+  if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "18.0")
+    message(WARNING "Your compiler version may not support all used C++11 features!")
+  endif()
 endif()
 
 # enable c++11
 if(UNIX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
 endif()
 # MSVC does not require any special flags for c++11 support
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
+                    ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 # create library
 add_library(rgp-log SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp)
+
+if(WIN32)
+  include (GenerateExportHeader)
+  GENERATE_EXPORT_HEADER(rgp-log
+                         BASE_NAME RGPLOG
+                         EXPORT_MACRO_NAME RGPLOG_EXPORT
+                         EXPORT_FILE_NAME RGPLog_Export.h)
+
+  set_target_properties(rgp-log PROPERTIES DEFINE_SYMBOL "RGPLOG_EXPORTS")
+endif()
 
 # create example executable
 add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
@@ -41,12 +51,13 @@ target_link_libraries(example rgp-log)
 
 # set version info
 set_target_properties(rgp-log PROPERTIES
-					  VERSION 1.1
-					  SOVERSION 0)
+                      VERSION 1.1
+                      SOVERSION 0)
 
 # installation 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
-  DESTINATION include)
+        DESTINATION include)
 
 install(TARGETS rgp-log
-  LIBRARY DESTINATION lib)
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
