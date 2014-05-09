@@ -5,6 +5,7 @@ A Singleton Log Class to use for coordinated multithreaded logging (output or lo
 Installation
 =======
 There is a provided CMake configure file.  
+#### Linux / Mac OS X  ####
 On Unix you can use the following example commands (from within the project folder):  
 ```
 mkdir build
@@ -13,6 +14,9 @@ cmake -i ..
 make
 sudo make install
 ```
+#### Windows ####
+On Windows you can create a Visual Studio project which can create the dll.  
+
 
 LICENSE
 =======
