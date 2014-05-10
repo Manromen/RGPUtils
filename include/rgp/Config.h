@@ -36,7 +36,7 @@ namespace rgp {
         
     public:
         // create a config object with the given path to the config file
-        // throws config_exception on error
+        // throws ConfigException on error
         Config(std::string configPath);
         
         // get a config value for given key
