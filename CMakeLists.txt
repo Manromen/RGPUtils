@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8)
-project (RGP-Log)
+project (RGPLog)
 
 # check compiler for c++11 capability
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") # Clang
@@ -30,27 +30,27 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
                     ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 # create library
-add_library(rgp-log SHARED
+add_library(rgplog SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp)
 
 if(WIN32)
   include (GenerateExportHeader)
-  GENERATE_EXPORT_HEADER(rgp-log
+  GENERATE_EXPORT_HEADER(rgplog
                          BASE_NAME RGPLOG
                          EXPORT_MACRO_NAME RGPLOG_EXPORT
                          EXPORT_FILE_NAME RGPLog_Export.h)
 
-  set_target_properties(rgp-log PROPERTIES DEFINE_SYMBOL "RGPLOG_EXPORTS")
+  set_target_properties(rgplog PROPERTIES DEFINE_SYMBOL "RGPLOG_EXPORTS")
 endif()
 
 # create example executable
 add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
 
 # link library to test executable
-target_link_libraries(example rgp-log)
+target_link_libraries(example rgplog)
 
 # set version info
-set_target_properties(rgp-log PROPERTIES
+set_target_properties(rgplog PROPERTIES
                       VERSION 1.1
                       SOVERSION 0)
 
@@ -58,6 +58,6 @@ set_target_properties(rgp-log PROPERTIES
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
         DESTINATION include)
 
-install(TARGETS rgp-log
+install(TARGETS rgplog
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)
