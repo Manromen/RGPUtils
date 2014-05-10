@@ -35,6 +35,8 @@ add_library(rgpconfig SHARED
 # create example executable
 add_executable(example
                ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
+# copy example.conf to build folder
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/example/example.conf DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 
 # link library to example executable
 target_link_libraries(example rgpconfig)

@@ -31,7 +31,17 @@ using namespace rgp;
 
 int main (int argc, const char **argv)
 {
-    
+    try {
+        Config config { Config("example.conf") };
+        
+        std::string username = config.getOptionForKey( "username" );
+        
+        std::cout << "username: " << username << std::endl;
+        
+    } catch (ConfigException &exception) {
+        std::cout << "error parsing config file: "
+                  << exception.what() << std::endl;
+    }
     
     return EXIT_SUCCESS;
 }
