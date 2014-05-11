@@ -107,7 +107,7 @@ void Config::parseConfig()
                 
                 // value without the quotes "
                 value = line.substr(beginOfValue + 1,
-                                    endOfValue - beginOfValue);
+                                    endOfValue - 1 - beginOfValue);
             
             } else { // don't starts with " --> value is only one word
                 

@@ -48,7 +48,7 @@ set_target_properties(rgpconfig PROPERTIES
 
 # installation 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
-  DESTINATION include)
+        DESTINATION include)
 
 install(TARGETS rgpconfig
-  LIBRARY DESTINATION lib)
+        LIBRARY DESTINATION lib)
