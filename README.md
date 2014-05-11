@@ -15,7 +15,7 @@ make
 sudo make install
 ```
 #### Windows ####
-On Windows you can create a Visual Studio project which can create the dll.  
+On Windows you can create a Visual Studio project which will produce the dll.  
 To use the INSTALL Target you have to start Visual Studio in administrative mode.
 
 LICENSE
