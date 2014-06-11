@@ -32,6 +32,16 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(rgpconfig SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Config.cpp)
 
+if(WIN32)
+  include (GenerateExportHeader)
+  GENERATE_EXPORT_HEADER(rgpconfig
+                         BASE_NAME RGPCONFIG
+                         EXPORT_MACRO_NAME RGPCONFIG_EXPORT
+                         EXPORT_FILE_NAME RGPConfig_Export.h)
+
+  set_target_properties(rgpconfig PROPERTIES DEFINE_SYMBOL "RGPCONFIG_EXPORTS")
+endif()
+
 # create example executable
 add_executable(example
                ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
@@ -51,4 +61,5 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
         DESTINATION include)
 
 install(TARGETS rgpconfig
-        LIBRARY DESTINATION lib)
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)

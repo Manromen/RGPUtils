@@ -30,9 +30,20 @@ along with this library.
 #include <string>
 #include <map>
 
+// on windows we need the exports for creating the dll
+#if defined(_WIN32)
+  #if defined(RGPCONFIG_EXPORTS)
+    #define RGPCONFIG_EXPORT __declspec(dllexport)
+  #else
+    #define RGPCONFIG_EXPORT __declspec(dllimport)
+  #endif /* defined (RGPCONFIG_EXPORTS) */
+#else /* defined (_WIN32) */
+ #define RGPCONFIG_EXPORT
+#endif
+
 namespace rgp {
     
-    class Config {
+    class RGPCONFIG_EXPORT Config {
         
     public:
         // create a config object with the given path to the config file
@@ -49,7 +60,7 @@ namespace rgp {
     };
     
     /** Exception Class **/
-    class ConfigException : std::exception {
+    class RGPCONFIG_EXPORT ConfigException : std::exception {
         
     public:
         ConfigException() {};
