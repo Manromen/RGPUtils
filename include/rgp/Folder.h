@@ -89,7 +89,7 @@ namespace rgp {
             return _name;
         };
 
-        ///< The path to the entry (without the name)
+        ///< The path to the entry (without the name but with the trailing '/' or '\')
         std::string path() const{
             return _path;
         };

@@ -114,7 +114,7 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
         
         entry._name = ffd.cFileName;
         entry._type = EntryTypeUnknown;
-        entry._path = _path;
+        entry._path = _path + std::string("\\");
         entry._fullpath = _path + std::string("\\") + ffd.cFileName;
         
         if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
