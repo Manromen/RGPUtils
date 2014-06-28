@@ -114,7 +114,7 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
         
         entry._name = ffd.cFileName;
         entry._type = EntryTypeUnknown;
-        entry._path = _path + std::string("\\");
+        entry._path = _path;
         entry._fullpath = _path + std::string("\\") + ffd.cFileName;
         
         if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
@@ -183,6 +183,11 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
     }
 
     return folder;
+}
+
+std::string pathSeparator()
+{
+    return std::string("\\");
 }
 
 #endif // // defined(__APPLE__) || defined(__unix__) // defined(_WIN32)

@@ -89,7 +89,7 @@ namespace rgp {
             return _name;
         };
 
-        ///< The path to the entry (without the name but with the trailing '/' or '\')
+        ///< The path to the entry (without the name and without the trailing path separator)
         std::string path() const{
             return _path;
         };
@@ -129,6 +129,19 @@ namespace rgp {
          @return Shared Pointer to a vector that holds all the entries.
          */
         std::shared_ptr<std::vector<FolderEntry>> listEntries() const;
+
+        /**
+        @brief The path to this folder object.
+        */
+        std::string path() const {
+            return _path;
+        };
+
+        /**
+        @brief Holds the path separator for the current operating system.
+        @details Contains "/" on Unix and "\" on Windows.
+        */
+        static std::string pathSeparator();
 
         static std::shared_ptr<Folder> createFolder(const std::string &path);
 
