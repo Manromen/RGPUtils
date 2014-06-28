@@ -27,7 +27,7 @@
 
 using namespace rgp;
 
-Folder::Folder(const std::string &path) : _path(path)
+rgp::Folder::Folder(const std::string &path) : _path(path)
 {
     // TODO: check if _path points to a directory
     // throw an exception if _path is not readable or not a directory
@@ -88,13 +88,14 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
     
     return list;
 }
-#endif // defined(__APPLE__) || defined(__linux__)
 
 // Windows version
-#if defined(_WIN32)
-std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
+#elif defined(_WIN32)
+std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
 {
-    std::shared_ptr<std::vector<FolderEntry>> list { std::make_shared<std::vector<FolderEntry>>() };
+    std::shared_ptr<std::vector<FolderEntry>> list {
+        std::make_shared<std::vector<FolderEntry>>()
+    };
     
     // create structures to gather data
     HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -135,5 +136,54 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
     
     return list;
 }
-#endif // defined(_WIN32)
+
+std::shared_ptr<rgp::Folder> rgp::Folder::createFolder(const std::string &path)
+{
+    // create folder using WinAPI
+    bool success = CreateDirectory(path.c_str(), NULL);
+
+    // on success return the newly created folder
+    if (success) {
+        return std::make_shared<rgp::Folder>(rgp::Folder(path));
+    }
+
+    // on error we just return a nullptr
+    return nullptr;
+}
+
+std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
+{
+    LPWSTR wszPath = nullptr;
+    std::shared_ptr<rgp::Folder> folder;
+    switch (type)
+    {
+        case FolderTypeAppData: {
+            SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &wszPath);
+        } break;
+
+        case FolderTypeHome: {
+            SHGetKnownFolderPath(FOLDERID_Profile, 0, NULL, &wszPath);
+        } break;
+
+        default: break;
+    }
+
+    // check if something was found
+    if (wszPath != nullptr) {
+
+        // convert LPWSTR to string
+        std::stringstream ss;
+        ss << wszPath << std::flush;
+
+        // create folder object for the found directory
+        folder = std::make_shared<rgp::Folder>(ss.str());
+
+        // memory management
+        CoTaskMemFree(wszPath);
+    }
+
+    return folder;
+}
+
+#endif // // defined(__APPLE__) || defined(__unix__) // defined(_WIN32)
 

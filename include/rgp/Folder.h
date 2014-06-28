@@ -30,6 +30,7 @@ along with this library.
 #include <string>
 #include <vector>
 #include <memory>
+#include <sstream>
 
 // Unix
 #if defined(__APPLE__) || defined(__unix__)
@@ -40,6 +41,8 @@ along with this library.
 // Windows
 #if defined(_WIN32)
 #include <Windows.h>
+#include <winerror.h>
+#include <ShlObj.h>
 #endif // defined(_WIN32)
 
 // on windows we need the exports for creating the dll
@@ -54,12 +57,20 @@ along with this library.
 #endif
 
 namespace rgp {
+
+    class Folder;
     
     ///< type of an entry inside a folder
     enum EntryType {
         EntryTypeUnknown = 0, /**< Unknown file type */
         EntryTypeFolder, /**< File is a folder */
         EntryTypeRegularFile /**< A regular file */
+    };
+
+    enum FolderType {
+        FolderTypeDefault = 0, /**<  */
+        FolderTypeAppData,
+        FolderTypeHome
     };
     
     /**
@@ -114,10 +125,14 @@ namespace rgp {
         /**
          @brief List of all entries in the folder.
          @details This won't list any files from inside child folders.
-		 You have to iterate through the child folders if you want to get the files from there too.
+         You have to iterate through the child folders if you want to get the files from there too.
          @return Shared Pointer to a vector that holds all the entries.
          */
         std::shared_ptr<std::vector<FolderEntry>> listEntries() const;
+
+        static std::shared_ptr<Folder> createFolder(const std::string &path);
+
+        static std::shared_ptr<Folder> getFolder (const FolderType &type);
         
     private:
         std::string _path;
