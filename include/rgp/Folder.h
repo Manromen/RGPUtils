@@ -29,6 +29,7 @@ along with this library.
 // Standard C++
 #include <string>
 #include <vector>
+#include <memory>
 
 // Unix
 #if defined(__APPLE__) || defined(__linux__)
