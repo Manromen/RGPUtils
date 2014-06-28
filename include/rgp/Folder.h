@@ -163,9 +163,9 @@ namespace rgp {
     public:
         FolderException() {};
         FolderException(std::string exception) : _exceptionString(exception) {};
-        
-        std::string what() { return _exceptionString; };
-        virtual const char* what() const throw() {
+        ~FolderException() throw () {};
+
+        const char* what() const throw() {
             return _exceptionString.c_str();
         };
         

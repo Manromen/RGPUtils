@@ -33,8 +33,10 @@ rgp::Folder::Folder(const std::string &path) : _path(path)
     // throw an exception if _path is not readable or not a directory
 
 #if defined(_WIN32)
-    if (GetFileAttributes(_path.c_str()) != FILE_ATTRIBUTE_DIRECTORY) {
-        throw FolderException { "Path is not a directory." };
+    if (!(GetFileAttributes(_path.c_str()) & FILE_ATTRIBUTE_DIRECTORY)) {
+        std::stringstream message;
+        message << "Path \"" << path << "\"  is not a directory." << std::endl << std::flush;
+        throw FolderException { message.str() };
     }
 #endif // defined(_WIN32)
 
@@ -91,6 +93,34 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
 
 // Windows version
 #elif defined(_WIN32)
+
+// create a string with last error message
+std::string GetLastErrorAsString()
+{
+    DWORD error = GetLastError();
+    if (error) {
+        LPVOID lpMsgBuf;
+        DWORD bufLen = FormatMessage(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER |
+            FORMAT_MESSAGE_FROM_SYSTEM |
+            FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL,
+            error,
+            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            (LPTSTR)&lpMsgBuf,
+            0, NULL);
+        if (bufLen) {
+            LPCSTR lpMsgStr = (LPCSTR)lpMsgBuf;
+            std::string result(lpMsgStr, lpMsgStr + bufLen);
+
+            LocalFree(lpMsgBuf);
+
+            return result;
+        }
+    }
+    return std::string();
+}
+
 std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
 {
     std::shared_ptr<std::vector<FolderEntry>> list {
@@ -104,7 +134,7 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
     // get the first file from the folder
     hFind = FindFirstFile(_path.c_str(), &ffd);
     if (hFind == INVALID_HANDLE_VALUE)  {
-        // TODO: throw error ?
+        throw FolderException { GetLastErrorAsString() };
         return list;
     }
     
@@ -185,7 +215,7 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
     return folder;
 }
 
-std::string pathSeparator()
+std::string rgp::Folder::pathSeparator()
 {
     return std::string("\\");
 }

@@ -32,12 +32,12 @@ using namespace rgp;
 int main (int argc, const char **argv)
 {
     try {
-        
+
         // create folder object
 #if defined(__unix__) || defined(__APPLE__)
         Folder folder { "/" };
 #elif defined(_WIN32)
-        Folder folder { "C:\\" };
+        rgp::Folder folder { "C:" };
 #endif
         
         // get all entries in that folder
