@@ -32,10 +32,15 @@ along with this library.
 #include <memory>
 
 // Unix
-#if defined(__APPLE__) || defined(__linux__)
+#if defined(__APPLE__) || defined(__unix__)
 // on unixes we use dirent to iterate through the folder
 #include <dirent.h>
 #endif // defined(__APPLE__) || defined(__linux__)
+
+// Windows
+#if defined(_WIN32)
+#include <Windows.h>
+#endif // defined(_WIN32)
 
 // on windows we need the exports for creating the dll
 #if defined(_WIN32)
@@ -67,19 +72,27 @@ namespace rgp {
         EntryType type() const {
             return _type;
         };
+
         ///< The filename of the entry
         std::string name() const{
             return _name;
         };
+
         ///< The path to the entry (without the name)
         std::string path() const{
             return _path;
         };
         
+        ///< The path to the entry (with the name)
+        std::string fullpath() const{
+            return _fullpath;
+        };
+
     private:
         EntryType _type;
         std::string _name;
         std::string _path;
+        std::string _fullpath;
         
         friend class Folder;
     };
@@ -99,8 +112,9 @@ namespace rgp {
         Folder(const std::string &path);
         
         /**
-         @brief List of all entries from the folder.
-         @details
+         @brief List of all entries in the folder.
+         @details This won't list any files from inside child folders.
+		 You have to iterate through the child folders if you want to get the files from there too.
          @return Shared Pointer to a vector that holds all the entries.
          */
         std::shared_ptr<std::vector<FolderEntry>> listEntries() const;

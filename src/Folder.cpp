@@ -31,6 +31,13 @@ Folder::Folder(const std::string &path) : _path(path)
 {
     // TODO: check if _path points to a directory
     // throw an exception if _path is not readable or not a directory
+
+#if defined(_WIN32)
+    if (GetFileAttributes(_path.c_str()) != FILE_ATTRIBUTE_DIRECTORY) {
+        throw FolderException { "Path is not a directory." };
+    }
+#endif // defined(_WIN32)
+
 }
 
 // Unix version
@@ -52,7 +59,7 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
         while ( (dir_entry = readdir(directory)) != NULL ) {
             
             // create new folder entry
-            FolderEntry entry {};
+            FolderEntry entry;
             entry._name = dir_entry->d_name;
             entry._path = _path + entry._name;
             
@@ -85,11 +92,46 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
 
 // Windows version
 #if defined(_WIN32)
-std::vector<FolderEntry> Folder::listEntries() const
+std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
 {
     std::shared_ptr<std::vector<FolderEntry>> list { std::make_shared<std::vector<FolderEntry>>() };
     
-    // TODO: implement windows version
+    // create structures to gather data
+    HANDLE hFind = INVALID_HANDLE_VALUE;
+    WIN32_FIND_DATA ffd;
+
+    // get the first file from the folder
+    hFind = FindFirstFile(_path.c_str(), &ffd);
+    if (hFind == INVALID_HANDLE_VALUE)  {
+        // TODO: throw error ?
+        return list;
+    }
+    
+    // iterate through folder and fill the list vector
+    do {
+        FolderEntry entry;
+        
+        entry._name = ffd.cFileName;
+        entry._type = EntryTypeUnknown;
+        entry._path = _path;
+        entry._fullpath = _path + std::string("\\") + ffd.cFileName;
+        
+        if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            entry._type = EntryTypeFolder;
+        }
+        else if (ffd.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) {
+            entry._type = EntryTypeRegularFile;
+        }
+        
+    } while (FindNextFile(hFind, &ffd) != 0);
+    
+    if (GetLastError() != ERROR_NO_MORE_FILES) {
+        // TODO: throw error ?
+    }
+    
+    // deinit data structures
+    FindClose(hFind);
+    hFind = INVALID_HANDLE_VALUE;
     
     return list;
 }
