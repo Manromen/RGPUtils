@@ -27,17 +27,13 @@ along with this library.
 #define __RGPFolder__Folder_H__
 
 // Standard C++
-#include <iostream>
 #include <string>
-#include <map>
 #include <vector>
 
 // Unix
 #if defined(__APPLE__) || defined(__linux__)
+// on unixes we use dirent to iterate through the folder
 #include <dirent.h>
-#include <pwd.h>
-#include <unistd.h>
-#include <sys/types.h>
 #endif // defined(__APPLE__) || defined(__linux__)
 
 // on windows we need the exports for creating the dll
@@ -53,22 +49,28 @@ along with this library.
 
 namespace rgp {
     
-    // type of an entry inside the folder
+    ///< type of an entry inside a folder
     enum EntryType {
-        EntryTypeUnknown = 0,
-        EntryTypeFolder,
-        EntryTypeRegularFile
+        EntryTypeUnknown = 0, /**< Unknown file type */
+        EntryTypeFolder, /**< File is a folder */
+        EntryTypeRegularFile /**< A regular file */
     };
     
+    /**
+     @brief Data of an entry inside a folder.
+     */
     class RGPFOLDER_EXPORT FolderEntry {
         
     public:
+        ///< The type of the entry (f.e. a folder)
         EntryType type() const {
             return _type;
         };
+        ///< The filename of the entry
         std::string name() const{
             return _name;
         };
+        ///< The path to the entry (without the name)
         std::string path() const{
             return _path;
         };
@@ -81,23 +83,38 @@ namespace rgp {
         friend class Folder;
     };
     
+    /**
+     @brief A Class that represents a folder in the filesytem
+     */
     class RGPFOLDER_EXPORT Folder {
         
     public:
-        // create a folder object with the given folder path
-        // throws FolderException on error
+        /**
+         @brief Create a folder object with the given folder path.
+         @details Constructor for a folder object. Throws a FolderException
+         if the path is invalid or points to a file that is not a folder.
+         @param path The path to the folder that should be referenced.
+         */
         Folder(const std::string &path);
         
-        //
+        /**
+         @brief List of all entries from the folder.
+         @details
+         @return Shared Pointer to a vector that holds all the entries.
+         */
         std::shared_ptr<std::vector<FolderEntry>> listEntries() const;
         
     private:
         std::string _path;
         
+        // Don't allow creating an object without a path
         Folder() = delete;
     };
     
-    /** Exception Class **/
+    /**
+     @brief Folder Exception class.
+     @details Will be thrown on error.
+     */
     class RGPFOLDER_EXPORT FolderException : std::exception {
         
     public:

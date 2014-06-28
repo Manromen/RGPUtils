@@ -27,7 +27,6 @@
 
 using namespace rgp;
 
-
 Folder::Folder(const std::string &path) : _path(path)
 {
     // TODO: check if _path points to a directory
