@@ -27,6 +27,13 @@
 
 using namespace rgp;
 
+#if defined(_WIN32)
+// on windows we need to convert wstring to string
+#include <locale>
+#include <codecvt>
+std::string to_string (const std::wstring &origString);
+#endif // defined(_WIN32)
+
 rgp::Folder::Folder(const std::string &path) : _path(path)
 {
     // TODO: check if _path points to a directory
@@ -94,6 +101,14 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
 // Windows version
 #elif defined(_WIN32)
 
+// on windows we need to convert wstring to string
+std::string to_string (const std::wstring &origString)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+
+    return std::string(converter.to_bytes (origString));
+}
+
 // create a string with last error message
 std::string GetLastErrorAsString()
 {
@@ -109,12 +124,11 @@ std::string GetLastErrorAsString()
             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
             (LPTSTR)&lpMsgBuf,
             0, NULL);
-        if (bufLen) {
-            LPCSTR lpMsgStr = (LPCSTR)lpMsgBuf;
-            std::string result(lpMsgStr, lpMsgStr + bufLen);
+        if (bufLen != 0) {
+            LPCSTR lpMsgStr = (LPCSTR) lpMsgBuf;
+            std::string result { lpMsgStr };
 
             LocalFree(lpMsgBuf);
-
             return result;
         }
     }
@@ -170,10 +184,10 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
 std::shared_ptr<rgp::Folder> rgp::Folder::createFolder(const std::string &path)
 {
     // create folder using WinAPI
-    bool success = CreateDirectory(path.c_str(), NULL);
+    BOOL success = CreateDirectory(path.c_str(), NULL);
 
     // on success return the newly created folder
-    if (success) {
+    if (success == TRUE) {
         return std::make_shared<rgp::Folder>(rgp::Folder(path));
     }
 
@@ -201,12 +215,11 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
     // check if something was found
     if (wszPath != nullptr) {
 
-        // convert LPWSTR to string
-        std::stringstream ss;
-        ss << wszPath << std::flush;
+        // convert LPWSTR to wstring
+        std::wstring path { wszPath };
 
         // create folder object for the found directory
-        folder = std::make_shared<rgp::Folder>(ss.str());
+        folder = std::make_shared<rgp::Folder>(to_string(path));
 
         // memory management
         CoTaskMemFree(wszPath);
@@ -217,6 +230,7 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
 
 std::string rgp::Folder::pathSeparator()
 {
+    // we are on windows - so we return a \ as result 
     return std::string("\\");
 }
 

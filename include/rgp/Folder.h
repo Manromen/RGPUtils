@@ -43,6 +43,7 @@ along with this library.
 #include <Windows.h>
 #include <winerror.h>
 #include <ShlObj.h>
+
 #endif // defined(_WIN32)
 
 // on windows we need the exports for creating the dll
@@ -80,22 +81,22 @@ namespace rgp {
         
     public:
         ///< The type of the entry (f.e. a folder)
-        EntryType type() const {
+        EntryType type () const {
             return _type;
         };
 
         ///< The filename of the entry
-        std::string name() const{
+        std::string name () const{
             return _name;
         };
 
         ///< The path to the entry (without the name and without the trailing path separator)
-        std::string path() const{
+        std::string path () const{
             return _path;
         };
         
         ///< The path to the entry (with the name)
-        std::string fullpath() const{
+        std::string fullpath () const{
             return _fullpath;
         };
 
@@ -120,7 +121,7 @@ namespace rgp {
          if the path is invalid or points to a file that is not a folder.
          @param path The path to the folder that should be referenced.
          */
-        Folder(const std::string &path);
+        Folder (const std::string &path);
         
         /**
          @brief List of all entries in the folder.
@@ -128,12 +129,12 @@ namespace rgp {
          You have to iterate through the child folders if you want to get the files from there too.
          @return Shared Pointer to a vector that holds all the entries.
          */
-        std::shared_ptr<std::vector<FolderEntry>> listEntries() const;
+        std::shared_ptr<std::vector<FolderEntry>> listEntries () const;
 
         /**
         @brief The path to this folder object.
         */
-        std::string path() const {
+        std::string path () const {
             return _path;
         };
 
@@ -141,9 +142,9 @@ namespace rgp {
         @brief Holds the path separator for the current operating system.
         @details Contains "/" on Unix and "\" on Windows.
         */
-        static std::string pathSeparator();
+        static std::string pathSeparator ();
 
-        static std::shared_ptr<Folder> createFolder(const std::string &path);
+        static std::shared_ptr<Folder> createFolder (const std::string &path);
 
         static std::shared_ptr<Folder> getFolder (const FolderType &type);
         
