@@ -125,10 +125,30 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
 #endif // TARGET_OS_MAC
 #endif // defined(__APPLE__)
 #if defined(__linux__)
-            // TODO: implement
+            size_t exepath_size = 2048;
+            char exepath[exepath_size];
+            ssize_t writtenBytes = readlink("/proc/self/exe", exepath, exepath_size);
+
+            if (writtenBytes > 0) {
+                exepath[writtenBytes] = '\0';
+                char *exename { nullptr };
+
+                // determine the start of the name
+                for (int i=writtenBytes-1; i>0; i++) {
+                    if (exepath[i] == '/') {
+                        exename = &exepath[i+1];
+                        break;
+                    }
+                }
+                
+                std::string path {passwdEnt->pw_dir};
+                path += "/.";
+                path += std::string(exename);
+                return std::make_shared<rgp::Folder>(path);
+            }
 #endif // defined(__linux__)
         } break;
-            
+        
         case FolderTypeHome: {
             return std::make_shared<rgp::Folder>(passwdEnt->pw_dir);
         } break;

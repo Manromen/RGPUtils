@@ -37,7 +37,6 @@ along with this library.
 // on unixes we use dirent to iterate through the folder
 #include <dirent.h>
 #include <sys/stat.h>
-#include <uuid/uuid.h>
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
