@@ -32,31 +32,51 @@ using namespace rgp;
 int main (int argc, const char **argv)
 {
     try {
-
         // create folder object
 #if defined(__unix__) || defined(__APPLE__)
         Folder folder { "/" };
 #elif defined(_WIN32)
         rgp::Folder folder { "C:" };
 #endif
-        
-        // get all entries in that folder
-        std::shared_ptr<std::vector<FolderEntry>> list { folder.listEntries() };
-        
-        // feedback if the folder is empty
-        // ( in unix there should be at least . and .. )
-        if (list->size() == 0) {
-            std::cout << "No entries found" << std::endl;
+
+        if (folder.isFolder ()) {
+            // get all entries in that folder
+            std::shared_ptr<std::vector<FolderEntry>> list { folder.listEntries () };
+
+            // feedback if the folder is empty
+            // ( in unix there should be at least . and .. )
+            if (list->size () == 0) {
+                std::cout << "No entries found" << std::endl;
+            }
+
+            // print all entries from the folder
+            for (FolderEntry entry : *list) {
+                std::cout << "File: " << entry.name () << std::endl;
+            }
         }
-        
-        // print all entries from the folder
-        for ( FolderEntry entry : *list) {
-            std::cout << "File: " << entry.name() << std::endl;
+        else {
+            std::cout << folder.path () << " isn't a folder.";
         }
-        
-    } catch (FolderException &exception) {
-        std::cout << "error creating folder object: "
-        << exception.what() << std::endl;
+
+        // print folder for app data
+        std::shared_ptr<rgp::Folder> appData { rgp::Folder::getFolder (FolderTypeAppData) };
+        std::cout << "AppData: " << appData->path () << std::endl << std::flush;
+
+        // print home folder
+        std::shared_ptr<rgp::Folder> home { rgp::Folder::getFolder (FolderTypeHome) };
+        std::cout << "Home: " << home->path () << std::endl << std::flush;
+
+        // create a new folder
+        std::string newPath { home->path () + rgp::Folder::pathSeparator () + "TestFolder" };
+        std::shared_ptr<rgp::Folder> newFolder { rgp::Folder::createFolder (newPath) };
+
+        if (newFolder != nullptr)
+        {
+            std::cout << "Created new folder: " << newFolder->path () << std::endl << std::flush;
+        }
+    }
+    catch (rgp::FolderException &exception) {
+        std::cerr << "There was an error with a folder object: " << exception.what () << std::endl << std::flush;
     }
     
     return EXIT_SUCCESS;

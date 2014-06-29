@@ -36,17 +36,6 @@ std::string to_string (const std::wstring &origString);
 
 rgp::Folder::Folder(const std::string &path) : _path(path)
 {
-    // TODO: check if _path points to a directory
-    // throw an exception if _path is not readable or not a directory
-
-#if defined(_WIN32)
-    if (!(GetFileAttributes(_path.c_str()) & FILE_ATTRIBUTE_DIRECTORY)) {
-        std::stringstream message;
-        message << "Path \"" << path << "\"  is not a directory." << std::endl << std::flush;
-        throw FolderException { message.str() };
-    }
-#endif // defined(_WIN32)
-
 }
 
 // Unix version
@@ -101,6 +90,15 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
 // Windows version
 #elif defined(_WIN32)
 
+bool rgp::Folder::isFolder () const
+{
+    if ((GetFileAttributes (_path.c_str ()) & FILE_ATTRIBUTE_DIRECTORY)) {
+        return true;
+    }
+
+    return false;
+}
+
 // on windows we need to convert wstring to string
 std::string to_string (const std::wstring &origString)
 {
@@ -148,8 +146,7 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
     // get the first file from the folder
     hFind = FindFirstFile(_path.c_str(), &ffd);
     if (hFind == INVALID_HANDLE_VALUE)  {
-        throw FolderException { GetLastErrorAsString() };
-        return list;
+        return nullptr;
     }
     
     // iterate through folder and fill the list vector
@@ -186,13 +183,22 @@ std::shared_ptr<rgp::Folder> rgp::Folder::createFolder(const std::string &path)
     // create folder using WinAPI
     BOOL success = CreateDirectory(path.c_str(), NULL);
 
-    // on success return the newly created folder
-    if (success == TRUE) {
+    // on success (or already existent folder) return the newly created folder
+    if (success == TRUE || GetLastError() == ERROR_ALREADY_EXISTS) {
         return std::make_shared<rgp::Folder>(rgp::Folder(path));
     }
 
     // on error we just return a nullptr
     return nullptr;
+}
+
+std::shared_ptr<rgp::Folder> rgp::Folder::createSubFolder (const std::string &name)
+{
+    std::shared_ptr<rgp::Folder> subFolder {
+        rgp::Folder::createFolder (_path + pathSeparator () + name)
+    };
+
+    return subFolder;
 }
 
 std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)

@@ -117,17 +117,25 @@ namespace rgp {
     public:
         /**
          @brief Create a folder object with the given folder path.
-         @details Constructor for a folder object. Throws a FolderException
-         if the path is invalid or points to a file that is not a folder.
+         @details Constructor for a folder object.
          @param path The path to the folder that should be referenced.
          */
         Folder (const std::string &path);
+
+        /**
+        @brief Checks if the folder path is actually a folder.
+        @details The existence of a folder may change while the c++ object still exist.
+        You can also check this just after creating the object to check that the path really
+        point to a folder.
+        @return true if the folder path points currently to a folder.
+        */
+        bool isFolder () const;
         
         /**
          @brief List of all entries in the folder.
          @details This won't list any files from inside child folders.
          You have to iterate through the child folders if you want to get the files from there too.
-         @return Shared Pointer to a vector that holds all the entries.
+         @return Shared Pointer to a vector that holds all the entries. On error the pointer will be a nullptr.
          */
         std::shared_ptr<std::vector<FolderEntry>> listEntries () const;
 
@@ -145,6 +153,8 @@ namespace rgp {
         static std::string pathSeparator ();
 
         static std::shared_ptr<Folder> createFolder (const std::string &path);
+
+        std::shared_ptr<Folder> createSubFolder (const std::string &name);
 
         static std::shared_ptr<Folder> getFolder (const FolderType &type);
         
