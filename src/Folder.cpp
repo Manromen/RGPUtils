@@ -125,25 +125,36 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
 #endif // TARGET_OS_MAC
 #endif // defined(__APPLE__)
 #if defined(__linux__)
+            // get executable name from /proc filesytem
             size_t exepath_size = 2048;
             char exepath[exepath_size];
             ssize_t writtenBytes = readlink("/proc/self/exe", exepath, exepath_size);
 
+            // error check
             if (writtenBytes > 0) {
+                // readlink don't adds the terminating symbol '\0'
                 exepath[writtenBytes] = '\0';
+                
+                // we just want the name
                 char *exename { nullptr };
 
-                // determine the start of the name
-                for (int i=writtenBytes-1; i>0; i++) {
+                // determine the name by looking for '/' from the end to the
+                // beginning
+                for (int i=writtenBytes; i>0; i++) {
                     if (exepath[i] == '/') {
+                        // we found the start of the executable name
                         exename = &exepath[i+1];
                         break;
                     }
                 }
                 
+                // home folder + . + executable name will form our config path
+                // f.e. /home/user/.appname
                 std::string path {passwdEnt->pw_dir};
                 path += "/.";
                 path += std::string(exename);
+                
+                // return our result as folder
                 return std::make_shared<rgp::Folder>(path);
             }
 #endif // defined(__linux__)
