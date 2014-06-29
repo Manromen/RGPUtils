@@ -96,7 +96,8 @@ std::shared_ptr<rgp::Folder> rgp::Folder::createFolder(const std::string &path)
     return nullptr;
 }
 
-std::shared_ptr<rgp::Folder> rgp::Folder::createSubFolder (const std::string &name)
+std::shared_ptr<rgp::Folder>
+rgp::Folder::createSubFolder (const std::string &name)
 {
     std::shared_ptr<rgp::Folder> subFolder {
         rgp::Folder::createFolder (_path + pathSeparator() + name)
@@ -128,7 +129,9 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
             // get executable name from /proc filesytem
             size_t exepath_size = 2048;
             char exepath[exepath_size];
-            ssize_t writtenBytes = readlink("/proc/self/exe", exepath, exepath_size);
+            ssize_t writtenBytes = readlink("/proc/self/exe",
+                                            exepath,
+                                            exepath_size);
 
             // error check
             if (writtenBytes > 0) {
@@ -154,8 +157,8 @@ std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
                 path += "/.";
                 path += std::string(exename);
                 
-                // return our result as folder
-                return std::make_shared<rgp::Folder>(path);
+                // we may need to create the folder
+                return rgp::Folder::createFolder(path);
             }
 #endif // defined(__linux__)
         } break;

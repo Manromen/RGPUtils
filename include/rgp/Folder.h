@@ -94,7 +94,8 @@ namespace rgp {
             return _name;
         };
 
-        ///< The path to the entry (without the name and without the trailing path separator)
+        /**< The path to the entry
+         (without the name and without the trailing path separator) */
         std::string path () const{
             return _path;
         };
@@ -127,39 +128,59 @@ namespace rgp {
         Folder (const std::string &path);
 
         /**
-        @brief Checks if the folder path is actually a folder.
-        @details The existence of a folder may change while the c++ object still exist.
-        You can also check this just after creating the object to check that the path really
-        point to a folder.
-        @return true if the folder path points currently to a folder.
+         @brief Checks if the folder path is actually a folder.
+         @details The existence of a folder may change while the c++ object
+         still exist. You can also check this just after creating the object to
+         check that the path really
+         point to a folder.
+         @return true if the folder path points currently to a folder.
         */
         bool isFolder () const;
         
         /**
          @brief List of all entries in the folder.
          @details This won't list any files from inside child folders.
-         You have to iterate through the child folders if you want to get the files from there too.
-         @return Shared Pointer to a vector that holds all the entries. On error the pointer will be a nullptr.
+         You have to iterate through the child folders if you want to get the
+         files from there too.
+         @return Shared Pointer to a vector that holds all the entries.
+         On error the pointer will be a nullptr.
          */
         std::shared_ptr<std::vector<FolderEntry>> listEntries () const;
 
         /**
-        @brief The path to this folder object.
+         @brief The path to this folder object.
         */
         std::string path () const {
             return _path;
         };
 
         /**
-        @brief Holds the path separator for the current operating system.
-        @details Contains "/" on Unix and "\" on Windows.
+         @brief Holds the path separator for the current operating system.
+         @details Contains "/" on Unix and "\" on Windows.
         */
         static std::string pathSeparator ();
 
+        /**
+         @brief Create a folder at a given path.
+         @param path The path to the folder that should be created.
+         @return Folder object to the created folder or nullptr on error.
+         */
         static std::shared_ptr<Folder> createFolder (const std::string &path);
 
+        /**
+         @brief Creates a subfolder with the given name.
+         @param name The name of the folder that should be created.
+         @return Folder object to the created folder or nullptr on failure.
+         */
         std::shared_ptr<Folder> createSubFolder (const std::string &name);
 
+        /**
+         @brief Gets an os specific folder for a given use case.
+         @details This Method gets the folder for a given use case
+         (f.e.: home folder: /home/user on linux or /Users/user on max os x)
+         @param type The folder type (use case of the folder)
+         @return Folder object or nullptr on failure
+         */
         static std::shared_ptr<Folder> getFolder (const FolderType &type);
         
     private:
