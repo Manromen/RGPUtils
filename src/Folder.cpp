@@ -143,8 +143,12 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
     HANDLE hFind = INVALID_HANDLE_VALUE;
     WIN32_FIND_DATA ffd;
 
+    // we need to search for all files inside our folder
+    // so we need a search string like C:\our\folder\*
+    std::string searchString { _path + "\\*" };
+
     // get the first file from the folder
-    hFind = FindFirstFile(_path.c_str(), &ffd);
+    hFind = FindFirstFile(searchString.c_str(), &ffd);
     if (hFind == INVALID_HANDLE_VALUE)  {
         return nullptr;
     }
@@ -164,6 +168,9 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
         else if (ffd.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) {
             entry._type = EntryTypeRegularFile;
         }
+
+        // add entry to the list
+        list->push_back (entry);
         
     } while (FindNextFile(hFind, &ffd) != 0);
     

@@ -44,19 +44,25 @@ int main (int argc, const char **argv)
             // get all entries in that folder
             std::shared_ptr<std::vector<FolderEntry>> list { folder.listEntries () };
 
-            // feedback if the folder is empty
-            // ( in unix there should be at least . and .. )
-            if (list->size () == 0) {
-                std::cout << "No entries found" << std::endl;
-            }
+            if (list != nullptr)
+            {
+                // feedback if the folder is empty
+                // ( in unix there should be at least . and .. )
+                if (list->size () == 0) {
+                    std::cout << "No entries found" << std::endl;
+                }
 
-            // print all entries from the folder
-            for (FolderEntry entry : *list) {
-                std::cout << "File: " << entry.name () << std::endl;
+                // print all entries from the folder
+                for (FolderEntry entry : *list) {
+                    std::cout << "File: " << entry.name () << std::endl;
+                }
+            }
+            else {
+                std::cout << folder.path () << " couldn't list folder entries." << std::endl;
             }
         }
         else {
-            std::cout << folder.path () << " isn't a folder.";
+            std::cout << folder.path () << " isn't a folder." << std::endl;
         }
 
         // print folder for app data
