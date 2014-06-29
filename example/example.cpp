@@ -53,6 +53,23 @@ int main (int argc, const char **argv)
         for ( FolderEntry entry : *list) {
             std::cout << "File: " << entry.name() << std::endl;
         }
+
+        // print folder for app data
+        std::shared_ptr<rgp::Folder> appData { rgp::Folder::getFolder (FolderTypeAppData) };
+        std::cout << "AppData: " << appData->path () << std::endl << std::flush;
+
+        // print home folder
+        std::shared_ptr<rgp::Folder> home { rgp::Folder::getFolder (FolderTypeHome) };
+        std::cout << "Home: " << home->path () << std::endl << std::flush;
+
+        // create a new folder
+        std::string newPath { home->path() + rgp::Folder::pathSeparator() + "TestFolder" };
+        std::shared_ptr<rgp::Folder> newFolder { rgp::Folder::createFolder (newPath) };
+
+        if (newFolder != nullptr)
+        {
+            std::cout << "Created new folder: " << newFolder->path () << std::endl << std::flush;
+        }
         
     } catch (FolderException &exception) {
         std::cout << "error creating folder object: "
