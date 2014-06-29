@@ -39,6 +39,7 @@ int main (int argc, const char **argv)
         rgp::Folder folder { "C:" };
 #endif
 
+        // check if just created folder object has a legit corresponding folder.
         if (folder.isFolder ()) {
             // get all entries in that folder
             std::shared_ptr<std::vector<FolderEntry>> list { folder.listEntries () };
