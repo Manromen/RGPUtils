@@ -38,6 +38,136 @@ rgp::Folder::Folder(const std::string &path) : _path(path)
 {
 }
 
+bool rgp::Folder::isFolder () const
+{
+#if defined(__APPLE__) || defined(__unix__)
+    
+    struct stat statbuf;
+    stat(_path.c_str(), &statbuf);
+    return S_ISDIR(statbuf.st_mode);
+    
+#elif defined(_WIN32)
+    
+    if ((GetFileAttributes (_path.c_str ()) & FILE_ATTRIBUTE_DIRECTORY)) {
+        return true;
+    }
+#endif // defined(__APPLE__) || defined(__unix__) // defined(_WIN32)
+    
+    return false;
+}
+
+std::string rgp::Folder::pathSeparator()
+{
+#if defined(__APPLE__) || defined(__unix__)
+    // we are on a unix system - so return a / as result
+    return std::string("/");
+
+#elif defined(_WIN32)
+    // we are on windows - so we return a \ as result
+    return std::string("\\");
+#endif // defined(__APPLE__) || defined(__unix__) // defined(_WIN32)
+}
+
+std::shared_ptr<rgp::Folder> rgp::Folder::createFolder(const std::string &path)
+{
+#if defined(__APPLE__) || defined(__unix__)
+    
+    // create new folder with mkdir()
+    if (mkdir(path.c_str(), 0777) == 0) {
+        // on success return the newly created folder
+        return std::make_shared<rgp::Folder>(rgp::Folder(path));
+    } // if folder already existent, just return a folder from that
+    else if (errno == EEXIST) {
+        return std::make_shared<rgp::Folder>(rgp::Folder(path));
+    }
+    
+#elif defined(_WIN32)
+    
+    // create folder using WinAPI
+    BOOL success = CreateDirectory(path.c_str(), NULL);
+    
+    // on success (or already existent folder) return the newly created folder
+    if (success == TRUE || GetLastError() == ERROR_ALREADY_EXISTS) {
+        return std::make_shared<rgp::Folder>(rgp::Folder(path));
+    }
+#endif // defined(__APPLE__) || defined(__unix__) // defined(_WIN32)
+    
+    // on error we just return a nullptr
+    return nullptr;
+}
+
+std::shared_ptr<rgp::Folder> rgp::Folder::createSubFolder (const std::string &name)
+{
+    std::shared_ptr<rgp::Folder> subFolder {
+        rgp::Folder::createFolder (_path + pathSeparator() + name)
+    };
+    
+    return subFolder;
+}
+
+std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
+{
+    std::shared_ptr<rgp::Folder> folder;
+    
+#if defined(__APPLE__) || defined(__unix__)
+    
+    struct passwd *passwdEnt = getpwuid(getuid());
+    
+    switch (type)
+    {
+        case FolderTypeAppData: {
+#if defined(__APPLE__)
+            #include "TargetConditionals.h"
+#if TARGET_OS_MAC
+            std::string path {passwdEnt->pw_dir};
+            path += "/Library/Application Support";
+            return std::make_shared<rgp::Folder>(path);
+#endif // TARGET_OS_MAC
+#endif // defined(__APPLE__)
+#if defined(__linux__)
+            // TODO: implement
+#endif // defined(__linux__)
+        } break;
+            
+        case FolderTypeHome: {
+            return std::make_shared<rgp::Folder>(passwdEnt->pw_dir);
+        } break;
+            
+        default: break;
+    }
+    
+#elif defined(_WIN32)
+    LPWSTR wszPath = nullptr;
+    switch (type)
+    {
+        case FolderTypeAppData: {
+            SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &wszPath);
+        } break;
+            
+        case FolderTypeHome: {
+            SHGetKnownFolderPath(FOLDERID_Profile, 0, NULL, &wszPath);
+        } break;
+            
+        default: break;
+    }
+    
+    // check if something was found
+    if (wszPath != nullptr) {
+        
+        // convert LPWSTR to wstring
+        std::wstring path { wszPath };
+        
+        // create folder object for the found directory
+        folder = std::make_shared<rgp::Folder>(to_string(path));
+        
+        // memory management
+        CoTaskMemFree(wszPath);
+    }
+#endif // defined(__APPLE__) // defined(__unix__) // defined(_WIN32)
+    
+    return folder;
+}
+
 // Unix version
 #if defined(__APPLE__) || defined(__unix__)
 std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
@@ -89,15 +219,6 @@ std::shared_ptr<std::vector<FolderEntry>> Folder::listEntries() const
 
 // Windows version
 #elif defined(_WIN32)
-
-bool rgp::Folder::isFolder () const
-{
-    if ((GetFileAttributes (_path.c_str ()) & FILE_ATTRIBUTE_DIRECTORY)) {
-        return true;
-    }
-
-    return false;
-}
 
 // on windows we need to convert wstring to string
 std::string to_string (const std::wstring &origString)
@@ -185,67 +306,5 @@ std::shared_ptr<std::vector<FolderEntry>> rgp::Folder::listEntries() const
     return list;
 }
 
-std::shared_ptr<rgp::Folder> rgp::Folder::createFolder(const std::string &path)
-{
-    // create folder using WinAPI
-    BOOL success = CreateDirectory(path.c_str(), NULL);
-
-    // on success (or already existent folder) return the newly created folder
-    if (success == TRUE || GetLastError() == ERROR_ALREADY_EXISTS) {
-        return std::make_shared<rgp::Folder>(rgp::Folder(path));
-    }
-
-    // on error we just return a nullptr
-    return nullptr;
-}
-
-std::shared_ptr<rgp::Folder> rgp::Folder::createSubFolder (const std::string &name)
-{
-    std::shared_ptr<rgp::Folder> subFolder {
-        rgp::Folder::createFolder (_path + pathSeparator () + name)
-    };
-
-    return subFolder;
-}
-
-std::shared_ptr<rgp::Folder> rgp::Folder::getFolder(const FolderType &type)
-{
-    LPWSTR wszPath = nullptr;
-    std::shared_ptr<rgp::Folder> folder;
-    switch (type)
-    {
-        case FolderTypeAppData: {
-            SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &wszPath);
-        } break;
-
-        case FolderTypeHome: {
-            SHGetKnownFolderPath(FOLDERID_Profile, 0, NULL, &wszPath);
-        } break;
-
-        default: break;
-    }
-
-    // check if something was found
-    if (wszPath != nullptr) {
-
-        // convert LPWSTR to wstring
-        std::wstring path { wszPath };
-
-        // create folder object for the found directory
-        folder = std::make_shared<rgp::Folder>(to_string(path));
-
-        // memory management
-        CoTaskMemFree(wszPath);
-    }
-
-    return folder;
-}
-
-std::string rgp::Folder::pathSeparator()
-{
-    // we are on windows - so we return a \ as result 
-    return std::string("\\");
-}
-
-#endif // // defined(__APPLE__) || defined(__unix__) // defined(_WIN32)
+#endif // defined(__APPLE__) || defined(__unix__) // defined(_WIN32)
 

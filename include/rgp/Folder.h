@@ -36,6 +36,11 @@ along with this library.
 #if defined(__APPLE__) || defined(__unix__)
 // on unixes we use dirent to iterate through the folder
 #include <dirent.h>
+#include <sys/stat.h>
+#include <uuid/uuid.h>
+#include <pwd.h>
+#include <sys/types.h>
+#include <unistd.h>
 #endif // defined(__APPLE__) || defined(__linux__)
 
 // Windows
