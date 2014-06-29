@@ -148,7 +148,12 @@ namespace rgp {
         
     public:
         
-        /** Returns the shared log object. */
+        /** 
+         @brief The Log class is build as a singleton.
+         @details There is only one instance at a time. This method will give you this instance.
+         On first call this will create the singleton instance.
+         @return The shared log object.
+         */
         static Log *sharedLog ();
         
         /**
@@ -264,6 +269,21 @@ namespace rgp {
          @sa useLogfile()
          */
         void useErrorfile (const std::string filePath);
+
+        /**
+        @brief Enables or disables the use of ANSI SGR Codes.
+        @details The Terminal have to support the ANSI SGR Codes. Default: Disabled.
+        @param useAnsiSgrCodes Setting this to true will enable the usage of ANSI SGR Codes.
+        @sa useAnsiSgrCodes()
+        */
+        void setUseAnsiSgrCodes (const bool useAnsiSgrCodes);
+
+        /**
+        @brief Determines if ANSI SGR Codes are enabled.
+        @return True if ANSI SGR Codes are enables, false otherwise.
+        @sa setUseAnsiSgrCodes()
+        */
+        bool useAnsiSgrCodes () const;
         
     private:
         
@@ -298,6 +318,9 @@ namespace rgp {
         
         // stores the path to the given error logfile
         std::string _errorFilePath { "" };
+
+        // determines if ANSI SGR Codes should be used or not
+        bool _useAnsiSgrCodes { false };
         
         // creates ANSI SGR Code for given foreground and background colors
         std::string createSelectGraphicRenditionCode(const AnsiSgrFgColor fgcolor,

@@ -104,13 +104,15 @@ void Log::print (const std::string text, const AnsiSgrFgColor fgcolor,
         } else {
             
             // TODO: check if terminal supports ansi colors
-            std::cout << createSelectGraphicRenditionCode(fgcolor, bgcolor);
+            if (_useAnsiSgrCodes)
+                std::cout << createSelectGraphicRenditionCode(fgcolor, bgcolor);
             
             // output to stdout
             std::cout << text << std::endl << std::flush;
             
             // reset colors to default
-            std::cout << resetSelectGraphicRenditionCode();
+            if (_useAnsiSgrCodes)
+                std::cout << resetSelectGraphicRenditionCode();
         }
         
         _cout_mutex.unlock();
@@ -183,7 +185,7 @@ void Log::error (const std::string text)
     } else {
         
         // output to stderr
-        std::cerr << text << std::endl;
+        std::cerr << text << std::endl << std::flush;
     }
     
     _cerr_mutex.unlock();
@@ -227,6 +229,22 @@ void Log::useErrorfile (const std::string filePath)
         _hasErrorfile = true;
     }
     file.close();
+}
+
+void Log::setUseAnsiSgrCodes (const bool useAnsiSgrCodes)
+{
+    _cout_mutex.lock();
+    _cerr_mutex.lock();
+    
+    _useAnsiSgrCodes = useAnsiSgrCodes;
+
+    _cerr_mutex.unlock();
+    _cout_mutex.unlock();
+}
+
+bool Log::useAnsiSgrCodes () const
+{
+    return _useAnsiSgrCodes;
 }
 
 // creates ANSI SGR Code for given foreground and background colors
