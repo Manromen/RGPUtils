@@ -49,6 +49,9 @@ int main (int argc, const char **argv)
     Log::sharedLog()->printv("logout on verbose mode ... not set yet => this" \
                              "won't be printed");
     
+    // enable ANSI SGR Color Codes
+    Log::sharedLog()->setUseAnsiSgrCodes(true);
+    
     Log::sharedLog()->print("This text is red!", AnsiSgrFgColorRed);
     Log::sharedLog()->print("This text is black on white background!",
                             AnsiSgrFgColorBlack, AnsiSgrBgColorWhite);
