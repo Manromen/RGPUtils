@@ -1,7 +1,10 @@
 /*
- example.cpp
+ RGPUtils
+ config_example.cpp
 
  Created by Ralph-Gordon Paul on 10. May 2014.
+ 
+ Example for usage of the Config Class.
  
  -------------------------------------------------------------------------------
  GNU Lesser General Public License Version 3, 29 June 2007
