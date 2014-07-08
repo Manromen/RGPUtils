@@ -1,7 +1,30 @@
 RGPUtils
 =======
+A Collection of lightweight Classes to assist in common tasks.  
+Supported platforms are Linux, Mac OS X and Windows.
 
+Current Modules are:  
+* Log    - A Singleton Class that provides thread-safe logging (output or logfile).
+* Config - Reads in a config file and provides access to the values via a dictionary (std::map).
+* Folder - Provides a platform independent way of accessing folders.
 
+Installation
+=======
+There is a provided CMake configure file.  
+#### Linux / Mac OS X  ####
+On Unix you can use the following example commands (from within the project folder):
+```
+mkdir build
+cd build
+cmake -i ..
+make
+sudo make install
+```
+#### Windows  ####
+On Windows you can create a Visual Studio project which will produce the dll.
+
+For more information please visit: http://www.cmake.org  
+There is also a very easy to use GUI Application for all platforms.
 
 LICENSE
 =======
