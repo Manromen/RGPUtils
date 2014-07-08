@@ -1,7 +1,10 @@
 /*
- example.cpp
+ RGPUtils
+ folder_example.cpp
 
  Created by Ralph-Gordon Paul on 27. June 2014.
+ 
+ Example usage of the Folder Class.
  
  -------------------------------------------------------------------------------
  GNU Lesser General Public License Version 3, 29 June 2007

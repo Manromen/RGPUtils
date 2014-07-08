@@ -1,30 +1,33 @@
 /*
-Folder.h
-
-Created by Ralph-Gordon Paul on 27. June 2014.
-
--------------------------------------------------------------------------------
-GNU Lesser General Public License Version 3, 29 June 2007
-
-Copyright (c) 2014 Ralph-Gordon Paul. All rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with this library.
--------------------------------------------------------------------------------
+ RGPUtils
+ Folder.h
+ 
+ Created by Ralph-Gordon Paul on 27. June 2014.
+ 
+ A Lightweight Class that provides cross-plattform access to folders.
+ 
+ -------------------------------------------------------------------------------
+ GNU Lesser General Public License Version 3, 29 June 2007
+ 
+ Copyright (c) 2014 Ralph-Gordon Paul. All rights reserved.
+ 
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public License
+ along with this library.
+ -------------------------------------------------------------------------------
 */
 
-#ifndef __RGPFolder__Folder_H__
-#define __RGPFolder__Folder_H__
+#ifndef __RGPUtils__Folder_H__
+#define __RGPUtils__Folder_H__
 
 // Standard C++
 #include <string>
@@ -52,13 +55,13 @@ along with this library.
 
 // on windows we need the exports for creating the dll
 #if defined(_WIN32)
-  #if defined(RGPFOLDER_EXPORTS)
-    #define RGPFOLDER_EXPORT __declspec(dllexport)
+  #if defined(RGPUTILS_EXPORTS)
+    #define RGPUTILS_EXPORT __declspec(dllexport)
   #else
-    #define RGPFOLDER_EXPORT __declspec(dllimport)
-  #endif /* defined (RGPFOLDER_EXPORTS) */
+    #define RGPUTILS_EXPORT __declspec(dllimport)
+  #endif /* defined (RGPUTILS_EXPORTS) */
 #else /* defined (_WIN32) */
- #define RGPFOLDER_EXPORT
+ #define RGPUTILS_EXPORT
 #endif
 
 namespace rgp {
@@ -81,7 +84,7 @@ namespace rgp {
     /**
      @brief Data of an entry inside a folder.
      */
-    class RGPFOLDER_EXPORT FolderEntry {
+    class RGPUTILS_EXPORT FolderEntry {
         
     public:
         ///< The type of the entry (f.e. a folder)
@@ -117,7 +120,7 @@ namespace rgp {
     /**
      @brief A Class that represents a folder in the filesytem
      */
-    class RGPFOLDER_EXPORT Folder {
+    class RGPUTILS_EXPORT Folder {
         
     public:
         /**
@@ -194,7 +197,7 @@ namespace rgp {
      @brief Folder Exception class.
      @details Will be thrown on error.
      */
-    class RGPFOLDER_EXPORT FolderException : std::exception {
+    class RGPUTILS_EXPORT FolderException : std::exception {
         
     public:
         FolderException() {};
@@ -210,4 +213,4 @@ namespace rgp {
     };
 }
 
-#endif /* defined(__RGPFolder__Folder_H__) */
+#endif // defined(__RGPUtils__Folder_H__) header guard

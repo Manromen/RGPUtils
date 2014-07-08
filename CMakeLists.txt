@@ -27,7 +27,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
 
 # create library
 add_library(rgputils SHARED
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp)
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/Folder.cpp)
 
 if(WIN32)
   include (GenerateExportHeader)
@@ -39,11 +40,13 @@ if(WIN32)
   set_target_properties(rgputils PROPERTIES DEFINE_SYMBOL "RGPUTILS_EXPORTS")
 endif()
 
-# create example executable
+# create example executables
 add_executable(example_log ${CMAKE_CURRENT_SOURCE_DIR}/example/log_example.cpp)
+add_executable(example_folder ${CMAKE_CURRENT_SOURCE_DIR}/example/folder_example.cpp)
 
 # link library to test executable
 target_link_libraries(example_log rgputils)
+target_link_libraries(example_folder rgputils)
 
 # set version info
 set_target_properties(rgputils PROPERTIES

@@ -1,7 +1,10 @@
 /*
- example.cpp
+ RGPUtils
+ log_example.cpp
 
  Created by Ralph-Gordon Paul on 24.07.13.
+ 
+ Example usage of the Log Class.
  
  -------------------------------------------------------------------------------
  GNU Lesser General Public License Version 3, 29 June 2007

@@ -1,4 +1,5 @@
 /*
+ RGPUtils
  Log.h
  
  Created by Ralph-Gordon Paul on 08. July 2013.
@@ -26,8 +27,8 @@
  -------------------------------------------------------------------------------
  */
 
-#ifndef __RGPUtils__Log__
-#define __RGPUtils__Log__
+#ifndef __RGPUtils__Log_H__
+#define __RGPUtils__Log_H__
 
 #include <mutex>
 #include <atomic>
@@ -346,4 +347,4 @@ namespace rgp {
     };
 }
 
-#endif // defined(__RGPUtils__Log__) header guard
+#endif // defined(__RGPUtils__Log_H__) header guard
