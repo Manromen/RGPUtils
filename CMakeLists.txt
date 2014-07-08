@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8)
-project (RGPLog)
+project (RGPUtils)
 
 # check compiler for c++11 capability and activate c++11 if there are special flags required
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") # Clang
@@ -26,34 +26,34 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
                     ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 # create library
-add_library(rgplog SHARED
+add_library(rgputils SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp)
 
 if(WIN32)
   include (GenerateExportHeader)
-  GENERATE_EXPORT_HEADER(rgplog
-                         BASE_NAME RGPLOG
-                         EXPORT_MACRO_NAME RGPLOG_EXPORT
-                         EXPORT_FILE_NAME RGPLog_Export.h)
+  GENERATE_EXPORT_HEADER(rgputils
+                         BASE_NAME RGPUTILS
+                         EXPORT_MACRO_NAME RGPUTILS_EXPORT
+                         EXPORT_FILE_NAME RGPUtils_Export.h)
 
-  set_target_properties(rgplog PROPERTIES DEFINE_SYMBOL "RGPLOG_EXPORTS")
+  set_target_properties(rgputils PROPERTIES DEFINE_SYMBOL "RGPUTILS_EXPORTS")
 endif()
 
 # create example executable
-add_executable(example ${CMAKE_CURRENT_SOURCE_DIR}/example/example.cpp)
+add_executable(example_log ${CMAKE_CURRENT_SOURCE_DIR}/example/log_example.cpp)
 
 # link library to test executable
-target_link_libraries(example rgplog)
+target_link_libraries(example_log rgputils)
 
 # set version info
-set_target_properties(rgplog PROPERTIES
-                      VERSION 1.1
+set_target_properties(rgputils PROPERTIES
+                      VERSION 1.0
                       SOVERSION 0)
 
 # installation 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/rgp
         DESTINATION include)
 
-install(TARGETS rgplog
+install(TARGETS rgputils
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)

@@ -26,8 +26,8 @@
  -------------------------------------------------------------------------------
  */
 
-#ifndef __RGP__Log__
-#define __RGP__Log__
+#ifndef __RGPUtils__Log__
+#define __RGPUtils__Log__
 
 #include <mutex>
 #include <atomic>
@@ -35,13 +35,13 @@
 
 // on windows we need the exports for creating the dll
 #if defined(_WIN32)
-  #if defined(RGPLOG_EXPORTS)
-    #define RGPLOG_EXPORT __declspec(dllexport)
+  #if defined(RGPUTILS_EXPORTS)
+    #define RGPUTILS_EXPORT __declspec(dllexport)
   #else
-    #define RGPLOG_EXPORT __declspec(dllimport)
-  #endif /* defined (RGPLOG_EXPORTS) */
+    #define RGPUTILS_EXPORT __declspec(dllimport)
+  #endif /* defined (RGPUTILS_EXPORTS) */
 #else /* defined (_WIN32) */
- #define RGPLOG_EXPORT
+ #define RGPUTILS_EXPORT
 #endif
 
 // hide debug information (and string data) for better security
@@ -144,7 +144,7 @@ namespace rgp {
      @brief A Singleton Log class for thread-safe logging
      @details This class uses std::cout / std::cerr for log and error outputs.
      */
-    class RGPLOG_EXPORT Log {
+    class RGPUTILS_EXPORT Log {
         
     public:
         
@@ -330,7 +330,7 @@ namespace rgp {
     };
     
     /** Exception class for Log */
-    class RGPLOG_EXPORT LogException : std::exception {
+    class RGPUTILS_EXPORT LogException : std::exception {
         
     public:
         LogException () {};
@@ -346,4 +346,4 @@ namespace rgp {
     };
 }
 
-#endif // /* defined(__RGP__Log__) */
+#endif // defined(__RGPUtils__Log__) header guard
