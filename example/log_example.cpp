@@ -50,15 +50,16 @@ int main (int argc, const char **argv)
     Log::sharedLog()->print(logout.str());
     
     Log::sharedLog()->printv("logout on verbose mode ... not set yet => this" \
-                             "won't be printed");
-    
+        "won't be printed");
+
     // enable ANSI SGR Color Codes
+#if !defined(_WIN32)
     Log::sharedLog()->setUseAnsiSgrCodes(true);
     
     Log::sharedLog()->print("This text is red!", AnsiSgrFgColorRed);
     Log::sharedLog()->print("This text is black on white background!",
                             AnsiSgrFgColorBlack, AnsiSgrBgColorWhite);
-    
+#endif // !defined(_WIN32)
     Log::sharedLog()->setLoglevel(LoglevelVerbose);
     
     RGPLOGV("This will only be logged if compiled in debug mode and logging " \
